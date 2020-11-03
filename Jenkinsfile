@@ -3,7 +3,7 @@ pipeline {
     environment {
     	DISABLE_AUTH = 'true'
     }
-    
+
     stages {
         stage('build') {
             steps {
@@ -14,7 +14,7 @@ pipeline {
         stage('deploy') {
         	steps {
         		retry(3) {
-                    sh './flakey-deploy.sh'
+                    sh './test.sh'
                 }
 
                 timeout(time: 3, unit: 'MINUTES') {
