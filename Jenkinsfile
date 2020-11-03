@@ -1,10 +1,26 @@
 pipeline {
     agent { docker { image 'maven:3.3.3' } }
+    environment {
+    	DISABLE_AUTH = 'true'
+    }
+    
     stages {
         stage('build') {
             steps {
                 sh 'mvn --version'
             }
+        }
+
+        stage('deploy') {
+        	steps {
+        		retry(3) {
+                    sh './flakey-deploy.sh'
+                }
+
+                timeout(time: 3, unit: 'MINUTES') {
+                    sh './health-check.sh'
+                }
+        	}
         }
     }
 
